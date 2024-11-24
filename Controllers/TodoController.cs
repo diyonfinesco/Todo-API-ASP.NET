@@ -1,26 +1,51 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Todo.Entities;
+using Todo_API.Entities;
+using Todo_API.Services;
 
-namespace Todo.Controller
+namespace Todo_API.Controllers
 {
     [Route("/todos")]
     [ApiController]
     public class TodoController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetAllTodos()
-        {
-            var todos = new List<TodoEntity>{
-                new TodoEntity
-                {
-                    Id=1,
-                    Title = "todo 1",
-                    Description =  ""
-                }
-            };
+        private readonly ITodoService _todoService;
 
-            return Ok(todos);
+        public TodoController(ITodoService todoService)
+        {
+            _todoService = todoService;
+        }
+
+        [HttpGet]
+        public IActionResult GetAllTodos()
+        {
+            return Ok(_todoService.GetAllTodos());
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetTodo(int id)
+        {
+            return Ok(_todoService.GetTodoById(id));
+        }
+
+        [HttpPost]
+        public IActionResult CreateTodo(TodoEntity newTodoEntity)
+        {
+            return Ok(_todoService.AddTodo(newTodoEntity));
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        public IActionResult UpdateTodo(int id, TodoEntity updateTodoEntity)
+        {
+            return Ok(_todoService.UpdateTodo(id, updateTodoEntity));
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult DeleteTodo(int id)
+        {
+            return Ok(_todoService.DeleteTodo(id));
         }
     }
 }

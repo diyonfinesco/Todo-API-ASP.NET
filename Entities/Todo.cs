@@ -1,4 +1,4 @@
-namespace Todo.Entities
+namespace Todo_API.Entities
 {
     public class TodoEntity
     {
